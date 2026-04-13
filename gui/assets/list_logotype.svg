@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" role="img" aria-labelledby="title">
+  <title>LIST</title>
+  <g fill="#F8F9FA" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="92">
+    <text x="12" y="89">L</text>
+    <text x="150" y="89">S</text>
+    <text x="228" y="89">T</text>
+  </g>
+  <g>
+    <rect x="112" y="18" width="18" height="18" rx="2" fill="#F8F9FA"/>
+    <rect x="118" y="41" width="18" height="18" rx="2" fill="#F8F9FA"/>
+    <rect x="118" y="64" width="18" height="18" rx="2" fill="#F8F9FA"/>
+    <rect x="124" y="87" width="18" height="18" rx="2" fill="#F57C00"/>
+  </g>
+</svg>

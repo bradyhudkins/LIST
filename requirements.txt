@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+pydantic
+dash>=2.14
+dash-bootstrap-components
+requests
+reportlab
+python-docx
+jinja2
+aiofiles
+dash-cytoscape

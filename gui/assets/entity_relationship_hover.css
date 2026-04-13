@@ -1,0 +1,30 @@
+.entity-relationship-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.entity-relationship-hover {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition-delay: 0.5s;
+  background: rgba(17, 24, 39, 0.96);
+  color: #f8fafc;
+  font-size: 11px;
+  line-height: 1.2;
+  padding: 4px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.entity-relationship-wrap:hover .entity-relationship-hover {
+  opacity: 1;
+  transform: translateY(0);
+}
