@@ -1,0 +1,12 @@
+.quick-jump-btn {
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+.quick-jump-btn:hover,
+.quick-jump-btn:focus,
+.quick-jump-btn:active {
+  background-color: #F0883E !important;
+  border-color: #F0883E !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 1px rgba(240, 136, 62, 0.18);
+}
