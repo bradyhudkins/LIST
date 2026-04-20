@@ -81,12 +81,11 @@ If BIAS is unavailable, LIST still starts and `GET /health` reports `"bias_ready
 
 ## CALDERA Integration
 
-LIST can optionally enrich BIAS v2 output with CALDERA adversarial abilities and commands:
+LIST includes a local CALDERA stockpile so BIAS v2 bridge candidates can be enriched with adversarial actions in air-gapped environments.
 
-- set `CALDERA_PATH` to your CALDERA repo root, or
-- place a `CALDERA/` or `caldera/` directory beside this repo or inside it
+By default, LIST indexes `stockpile/data/abilities` packaged with this repo. You can override that bundled data by setting `CALDERA_PATH` to a local CALDERA/stockpile checkout.
 
-When available, LIST indexes ATT&CK-mapped abilities from CALDERA ability YAMLs and shows matched actions for observables, bridge candidates, and multi-hop techniques in the BIAS view. If CALDERA is unavailable, LIST still starts and `GET /health` reports `"caldera_ready": false`.
+When available, LIST indexes ATT&CK-mapped abilities from local CALDERA ability YAMLs and shows matched actions for observables, bridge candidates, and multi-hop techniques in the BIAS view. If CALDERA ability data is unavailable, LIST still starts and `GET /health` reports `"caldera_ready": false`.
 
 ## Repository Layout
 

@@ -37,6 +37,7 @@ def _ability_paths(caldera_path: str) -> list[Path]:
     candidates = [
         root / "data" / "abilities",
         root / "plugins" / "stockpile" / "data" / "abilities",
+        root / "stockpile" / "data" / "abilities",
     ]
     plugins_dir = root / "plugins"
     if plugins_dir.is_dir():
@@ -197,12 +198,22 @@ def lookup_actions(tcode: str, limit: int = 5) -> list[dict]:
     normalized = _normalize_tcode(tcode)
     if not normalized:
         return []
-    actions = list(_index.get(normalized) or [])
-    if "." in normalized:
-        base = _base_tcode(normalized)
-        for action in _index.get(base, []):
+
+    actions: list[dict] = []
+
+    def append_unique(rows: list[dict]) -> None:
+        for action in rows:
             if action not in actions:
                 actions.append(action)
+
+    append_unique(_index.get(normalized) or [])
+    if "." in normalized:
+        base = _base_tcode(normalized)
+        append_unique(_index.get(base, []) or [])
+    else:
+        child_prefix = f"{normalized}."
+        for child_tcode in sorted(key for key in _index if key.startswith(child_prefix)):
+            append_unique(_index.get(child_tcode) or [])
     return copy.deepcopy(actions[:limit])
 
 

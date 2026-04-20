@@ -27,10 +27,14 @@ def _discover_caldera_path() -> str:
         return explicit
 
     candidates = (
+        os.path.join(BASE_DIR, "stockpile"),
         os.path.join(BASE_DIR, "CALDERA"),
-        os.path.join(os.path.dirname(BASE_DIR), "CALDERA"),
         os.path.join(BASE_DIR, "caldera"),
+        os.path.join(BASE_DIR, "BIASv2", "stockpile"),
+        os.path.join(os.path.dirname(BASE_DIR), "stockpile"),
+        os.path.join(os.path.dirname(BASE_DIR), "CALDERA"),
         os.path.join(os.path.dirname(BASE_DIR), "caldera"),
+        os.path.join(os.path.dirname(BASE_DIR), "BIASv2", "stockpile"),
     )
     for candidate in candidates:
         if os.path.isdir(candidate):
