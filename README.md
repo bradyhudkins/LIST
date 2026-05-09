@@ -90,6 +90,45 @@ Expected input fields:
 The raw detection payload is preserved under `raw_data` so analysts can review
 the original Sigma content inside LIST after ingest.
 
+## Security Onion Ingest
+
+LIST also includes a helper for direct Security Onion event exports.
+
+Files:
+
+- `scripts/security_onion_ingest.py`
+- `scripts/sample_security_onion_event.json`
+
+What it does:
+
+- reads JSON, NDJSON, or YAML exports from Security Onion
+- extracts host, source IP, destination IP, event title, and severity
+- derives ATT&CK technique IDs from tags when they are present
+- forwards normalized alerts to `POST /api/ingest/bulk`
+
+Typical usage:
+
+```bash
+python scripts/security_onion_ingest.py scripts/sample_security_onion_event.json \
+  --api-url http://localhost:8000 \
+  --token YOUR_LIST_BEARER_TOKEN
+```
+
+Preview normalized payloads without posting:
+
+```bash
+python scripts/security_onion_ingest.py scripts/sample_security_onion_event.json --print-only
+```
+
+Recommended handoff:
+
+1. Export alerts or detections from Security Onion as JSON or NDJSON.
+2. Run `security_onion_ingest.py` to normalize and submit them to LIST.
+3. Use `sigma_ingest.py` when your source data is already in Sigma-style rule or detection format.
+
+The Security Onion helper defaults to `source_type=security_onion` so imported
+alerts remain distinguishable from Sigma-derived ingest.
+
 ## Configuration
 
 Use environment variables directly or copy values from `.env.example` into your local shell setup.
@@ -130,7 +169,7 @@ When available, LIST indexes ATT&CK-mapped abilities from local CALDERA ability 
 list/
 ├── api/           FastAPI backend
 ├── gui/           Dash frontend
-├── scripts/       Local helper scripts including Sigma ingest
+├── scripts/       Local helper scripts for Sigma and Security Onion ingest
 ├── attachments/   Runtime uploads (gitignored)
 ├── backups/       Runtime backups (gitignored)
 ├── reports/       Generated reports (gitignored)

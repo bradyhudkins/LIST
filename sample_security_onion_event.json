@@ -1,0 +1,27 @@
+[
+  {
+    "_id": "so-demo-1001",
+    "@timestamp": "2026-05-09T15:10:00Z",
+    "host": {
+      "name": "workstation-22"
+    },
+    "source": {
+      "ip": "10.10.20.15"
+    },
+    "destination": {
+      "ip": "198.51.100.25"
+    },
+    "event": {
+      "severity": 3,
+      "title": "ET POLICY Powershell Download",
+      "tags": [
+        "attack.t1059.001",
+        "attack.t1105"
+      ]
+    },
+    "rule": {
+      "name": "Powershell suspicious download"
+    },
+    "message": "Detected suspicious PowerShell web request from workstation-22"
+  }
+]
