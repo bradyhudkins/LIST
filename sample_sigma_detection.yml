@@ -1,0 +1,16 @@
+- title: Suspicious PowerShell Download
+  id: sigma-demo-001
+  level: high
+  tags:
+    - attack.t1059.001
+    - attack.t1105
+  host:
+    name: workstation-22
+  source:
+    ip: 10.10.20.15
+  destination:
+    ip: 198.51.100.25
+  timestamp: 2026-05-09T14:00:00Z
+  event:
+    module: powershell
+    command_line: powershell.exe -enc SQBtA...

@@ -26,7 +26,7 @@ Default local login:
 - username: `admin`
 - password: `admin123`
 
-For anything beyond local testing, change `LIST_SECRET_KEY` and `ADMIN_PASSWORD`.
+For anything beyond local testing, change `ADMIN_PASSWORD`, change `LIST_SECRET_KEY`, or delete the bootstrap admin account after creating real admin users.
 
 ## Manual Setup
 
@@ -54,6 +54,42 @@ Start the GUI:
 python gui/app.py
 ```
 
+## Sigma Ingest
+
+LIST includes a helper script for forwarding Sigma-style detections into the
+existing ingest pipeline.
+
+Files:
+
+- `scripts/sigma_ingest.py`
+- `scripts/sample_sigma_detection.yml`
+
+What it does:
+
+- reads a JSON or YAML Sigma rule/detection export
+- extracts ATT&CK tags such as `attack.t1059.001`
+- maps Sigma level values into LIST severity values
+- forwards normalized alerts to `POST /api/ingest/bulk`
+
+Typical usage:
+
+```bash
+python scripts/sigma_ingest.py scripts/sample_sigma_detection.yml \
+  --api-url http://localhost:8000 \
+  --token YOUR_LIST_BEARER_TOKEN
+```
+
+Expected input fields:
+
+- `title` or `rule.title`
+- `id` or `rule.id`
+- `level`
+- `tags`
+- optional host and network fields such as `host.name`, `source.ip`, and `destination.ip`
+
+The raw detection payload is preserved under `raw_data` so analysts can review
+the original Sigma content inside LIST after ingest.
+
 ## Configuration
 
 Use environment variables directly or copy values from `.env.example` into your local shell setup.
@@ -63,11 +99,13 @@ Use environment variables directly or copy values from `.env.example` into your 
 | `LIST_API_PORT` | `8000` | API server port |
 | `LIST_GUI_PORT` | `8050` | GUI port |
 | `LIST_DATABASE_URL` | `sqlite:///./list.db` | Database URL |
-| `LIST_SECRET_KEY` | `change-me-before-production` | JWT signing key |
+| `LIST_SECRET_KEY` | generated at runtime if unset | JWT signing key |
 | `ADMIN_USERNAME` | `admin` | Seeded admin username |
 | `ADMIN_EMAIL` | `admin@list.local` | Seeded admin email |
 | `ADMIN_PASSWORD` | `admin123` | Seeded admin password |
 | `BIAS_PATH` | empty | Optional path to a BIAS checkout |
+| `CALDERA_PATH` | empty | Optional path to a CALDERA checkout for ability lookup |
+| `LIST_API_URL` | `http://localhost:8000` | API base URL used by helper scripts |
 
 ## BIAS Integration
 
@@ -78,12 +116,21 @@ LIST runs without BIAS if none is configured. To enable gap analysis:
 
 If BIAS is unavailable, LIST still starts and `GET /health` reports `"bias_ready": false`.
 
+## CALDERA Integration
+
+LIST includes a local CALDERA stockpile so BIAS v2 bridge candidates can be enriched with adversarial actions in air-gapped environments.
+
+By default, LIST indexes `stockpile/data/abilities` packaged with this repo. You can override that bundled data by setting `CALDERA_PATH` to a local CALDERA/stockpile checkout.
+
+When available, LIST indexes ATT&CK-mapped abilities from local CALDERA ability YAMLs and shows matched actions for observables, bridge candidates, and multi-hop techniques in the BIAS view. If CALDERA ability data is unavailable, LIST still starts and `GET /health` reports `"caldera_ready": false`.
+
 ## Repository Layout
 
 ```text
 list/
 ├── api/           FastAPI backend
 ├── gui/           Dash frontend
+├── scripts/       Local helper scripts including Sigma ingest
 ├── attachments/   Runtime uploads (gitignored)
 ├── backups/       Runtime backups (gitignored)
 ├── reports/       Generated reports (gitignored)
@@ -121,14 +168,3 @@ Staging and ingestion:
 - `DELETE /api/staging/{id}`
 - `POST /api/ingest/alert`
 - `POST /api/ingest/bulk`
-
-## GitHub Publishing Notes
-
-This repo should not include local runtime artifacts such as:
-
-- `list.db`
-- files under `attachments/`
-- files under `backups/`
-- generated reports under `reports/`
-
-Those paths are meant to stay local. Review any screenshots, sample reports, or backup zips before publishing a public repo.
